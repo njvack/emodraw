@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas playground</title>
+    <style type="text/css">
+        canvas {
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+    <h1>DRAW YOUR LOVE</h1>
+    <canvas width="400" height="400" id="can" style="position: relative;">
+
+    </canvas>
+</body>
+<script type="text/javascript" charset="utf8">
+var c = document.getElementById('can');
+// document.addEventListener('mousemove', function(e) { console.log(e);})
+ctx = c.getContext('2d');
+
+
+var drawer = function(canvas_element) {
+    var cvs = canvas_element;
+    var c = cvs.getContext('2d');
+    var button_count = 0;
+    c.fillStyle = "rgb(220,220,255)";
+    c.fillRect(0, 0, 400, 400);
+    c.fillStyle = "rgba(0, 0, 0, 0.15)";
+    document.addEventListener('mousedown', function(e) {
+        button_count++;
+        console.log(button_count);
+    });
+    document.addEventListener('mouseup', function(e) {
+        button_count--;
+        console.log(button_count);
+        if (button_count < 1) {
+        }
+    });
+
+    document.addEventListener('dragend', function(e) {
+        button_count--;
+        console.log('dragend');
+        if (button_count < 1) {
+        }
+    });
+
+    cvs.addEventListener('mousedown', function(e) {
+        c.beginPath();
+        c.arc(e.offsetX, e.offsetY, 6, 0, 2*Math.PI);
+        c.fill();
+        c.closePath();
+    });
+
+    cvs.addEventListener('mousemove', function(e) {
+        if (button_count < 1) { return; }
+        c.beginPath();
+        c.arc(e.offsetX, e.offsetY, 6, 0, 2*Math.PI);
+        c.fill();
+        c.closePath();
+
+    })
+
+}(document.getElementById('can'));
+</script>
+</html>
