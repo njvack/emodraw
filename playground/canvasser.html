@@ -24,41 +24,76 @@ var drawer = function(canvas_element) {
     var cvs = canvas_element;
     var c = cvs.getContext('2d');
     var button_count = 0;
+    var last_point = {x: null, y: null};
+    var last_draw_time = null;
+
     c.fillStyle = "rgb(220,220,255)";
     c.fillRect(0, 0, 400, 400);
-    c.fillStyle = "rgba(0, 0, 0, 0.15)";
+    c.fillStyle = "rgba(0, 0, 0, 0.1)";
+
+    var start_draw = function(e) {
+        last_point.x = e.offsetX;
+        last_point.y = e.offsetY;
+        last_draw_time = e.timestamp;
+    };
+
+    var stop_draw = function(e) {
+        last_point.x = null;
+        last_point.y = null;
+        last_draw_time = null;
+    };
+
+    var draw_point = function(point, radius) {
+        c.beginPath();
+        c.arc(point.x, point.y, radius, 0, 2*Math.PI);
+        c.fill();
+        c.closePath();
+    }
+
+    var handle_move = function(e) {
+        var point_offset, dist, dt, steps, temp_point, i;
+        point_offset = {
+            x: e.offsetX - last_point.x,
+            y: e.offsetY - last_point.y
+        }
+        dist = Math.sqrt(
+            Math.pow(point_offset.x, 2) + Math.pow(point_offset.y, 2));
+        steps = Math.floor(dist);
+        dt = e.timestamp - last_draw_time;
+        for (i = 1; i < steps; i++) {
+            temp_point = {
+                x: ((i/steps) * point_offset.x) + last_point.x,
+                y: ((i/steps) * point_offset.y) + last_point.y
+            };
+            draw_point(temp_point, 6);
+        }
+        last_point.x = e.offsetX;
+        last_point.y = e.offsetY;
+        last_draw_time = e.timestamp;
+        draw_point(last_point);
+    };
+
     document.addEventListener('mousedown', function(e) {
         button_count++;
-        console.log(button_count);
+        start_draw(e);
     });
     document.addEventListener('mouseup', function(e) {
         button_count--;
-        console.log(button_count);
-        if (button_count < 1) {
-        }
+        stop_draw(e);
     });
 
     document.addEventListener('dragend', function(e) {
         button_count--;
-        console.log('dragend');
-        if (button_count < 1) {
-        }
+        stop_draw(e);
     });
 
     cvs.addEventListener('mousedown', function(e) {
-        c.beginPath();
-        c.arc(e.offsetX, e.offsetY, 6, 0, 2*Math.PI);
-        c.fill();
-        c.closePath();
+        draw_point({x: e.offsetX, y: e.offsetY}, 6);
     });
 
     cvs.addEventListener('mousemove', function(e) {
         if (button_count < 1) { return; }
-        c.beginPath();
-        c.arc(e.offsetX, e.offsetY, 6, 0, 2*Math.PI);
-        c.fill();
-        c.closePath();
-
+        handle_move(e);
     })
 
 }(document.getElementById('can'));
