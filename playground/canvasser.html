@@ -3,33 +3,87 @@
 <head>
     <title>Canvas playground</title>
     <style type="text/css">
-        canvas {
+        #wrapper {
+            position: relative;
+        }
+        #anat {
+            position: absolute;
+        }
+        #can {
+            position: relative;
             cursor: crosshair;
         }
     </style>
 </head>
 <body>
     <h1>DRAW YOUR LOVE</h1>
-    <canvas width="400" height="400" id="can" style="position: relative;">
+    <div id="wrapper">
+    </div>
+    <img src="male.svg" id="anat"/>
+    <canvas width="660" height="585" id="can">
 
     </canvas>
 </body>
 <script type="text/javascript" charset="utf8">
 var c = document.getElementById('can');
-// document.addEventListener('mousemove', function(e) { console.log(e);})
 ctx = c.getContext('2d');
 
+
+
+var getEventOffset = function(evt) {
+    // Why is this not in the damn spec?
+    // Anyhow, thanks http://stackoverflow.com/questions/8389156/what-substitute-should-we-use-for-layerx-layery-since-they-are-deprecated-in-web
+    var elt = evt.target,
+        x = 0,
+        y = 0;
+
+    while (elt && isFinite(elt.offsetLeft) && isFinite(elt.offsetTop)) {
+        x += elt.offsetLeft - elt.scrollLeft;
+        y += elt.offsetTop - elt.scrollTop;
+        elt = elt.offsetParent;
+    }
+    x = evt.clientX - x;
+    y = evt.clientY - y;
+
+    return {x: x, y: y}
+}
 
 var drawer = function(canvas_element) {
     var cvs = canvas_element;
     var c = cvs.getContext('2d');
     var button_count = 0;
     var last_point = {x: null, y: null};
-    var last_draw_time = null;
+    var point_canvas = null;
 
-    c.fillStyle = "rgb(220,220,255)";
-    c.fillRect(0, 0, 400, 400);
-    c.fillStyle = "rgba(0, 0, 0, 0.1)";
+    point_canvas = document.createElement('canvas')
+    // point_canvas.width = 12;
+    // point_canvas.height = 12;
+    // var pctx = point_canvas.getContext('2d');
+    // pctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    // pctx.beginPath();
+    // pctx.arc(6, 6, 6, 0, 2*Math.PI, false);
+    // pctx.fill();
+    // pctx.closePath();
+
+    var draw_point_canvas = function(cvs, radius) {
+        var pctx = cvs.getContext('2d'),
+            grd = pctx.createRadialGradient(
+                radius, radius, 0, radius, radius, radius);
+        cvs.width = radius*2;
+        cvs.height = radius*2;
+        console.log(grd);
+        grd.addColorStop(0, 'rgba(0, 0, 0, 0.1994)');
+        grd.addColorStop(0.2, 'rgba(0, 0, 0, 0.1666)');
+        grd.addColorStop(0.4, 'rgba(0, 0, 0, 0.097)');
+        grd.addColorStop(0.6, 'rgba(0, 0, 0, 0.0394)');
+        grd.addColorStop(0.8, 'rgba(0, 0, 0, 0.0112)');
+        grd.addColorStop(1, 'rgba(0, 0, 0, 0.0022)');
+        pctx.fillStyle = grd;
+        pctx.fillRect(0, 0, radius*2, radius*2);
+    };
+    draw_point_canvas(point_canvas, 6);
+
+    // c.fillStyle = 'rgba(0, 0, 0, 0.05)';
 
     var start_draw = function(e) {
         last_point.x = e.offsetX;
@@ -44,32 +98,28 @@ var drawer = function(canvas_element) {
     };
 
     var draw_point = function(point, radius) {
-        c.beginPath();
-        c.arc(point.x, point.y, radius, 0, 2*Math.PI);
-        c.fill();
-        c.closePath();
+        var x = point.x - radius, y = point.y - radius;
+        c.drawImage(point_canvas, x, y)
     }
 
-    var handle_move = function(e) {
-        var point_offset, dist, dt, steps, temp_point, i;
+    var handle_move = function(new_point) {
+        var point_offset, dist, steps, temp_point, i;
         point_offset = {
-            x: e.offsetX - last_point.x,
-            y: e.offsetY - last_point.y
+            x: new_point.x - last_point.x,
+            y: new_point.y - last_point.y
         }
         dist = Math.sqrt(
             Math.pow(point_offset.x, 2) + Math.pow(point_offset.y, 2));
         steps = Math.floor(dist);
-        dt = e.timestamp - last_draw_time;
-        for (i = 1; i < steps; i++) {
+        for (i = 0; i < steps; i++) {
             temp_point = {
                 x: ((i/steps) * point_offset.x) + last_point.x,
                 y: ((i/steps) * point_offset.y) + last_point.y
             };
             draw_point(temp_point, 6);
         }
-        last_point.x = e.offsetX;
-        last_point.y = e.offsetY;
-        last_draw_time = e.timestamp;
+        last_point.x = new_point.x;
+        last_point.y = new_point.y;
         draw_point(last_point);
     };
 
@@ -77,6 +127,7 @@ var drawer = function(canvas_element) {
         button_count++;
         start_draw(e);
     });
+
     document.addEventListener('mouseup', function(e) {
         button_count--;
         stop_draw(e);
@@ -88,12 +139,13 @@ var drawer = function(canvas_element) {
     });
 
     cvs.addEventListener('mousedown', function(e) {
-        draw_point({x: e.offsetX, y: e.offsetY}, 6);
+        console.log(e);
+        draw_point(getEventOffset(e), 6);
     });
 
     cvs.addEventListener('mousemove', function(e) {
         if (button_count < 1) { return; }
-        handle_move(e);
+        handle_move(getEventOffset(e));
     })
 
 }(document.getElementById('can'));
