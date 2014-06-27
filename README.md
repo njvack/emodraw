@@ -3,7 +3,7 @@
 EmoDraw is a little HTML-based app for drawing where on the body you're feeling a particular emotion. Ultimately, it's for generating body maps
 like in [Nummenmaa et al](http://www.pnas.org/content/111/2/646.abstract), though the [NPR article](http://www.npr.org/blogs/health/2013/12/30/258313116/mapping-emotions-on-the-body-love-makes-us-warm-all-over) will be less paywalled.
 
-This should be a littel Google App Engine beastie, probably in python, and participants will generate actual PNG files as their datasets.
+The backend of this is a little Rails app.
 
 There'll need to be some kind of admin interface, too, to allow researchers to set up what labels people will be drawing, and what avatars people will be able to choose from.
 
