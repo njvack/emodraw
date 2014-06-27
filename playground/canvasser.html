@@ -51,19 +51,11 @@ var getEventOffset = function(evt) {
 var drawer = function(canvas_element) {
     var cvs = canvas_element;
     var c = cvs.getContext('2d');
-    var button_count = 0;
+    var drawing = false;
     var last_point = {x: null, y: null};
     var point_canvas = null;
 
     point_canvas = document.createElement('canvas')
-    // point_canvas.width = 12;
-    // point_canvas.height = 12;
-    // var pctx = point_canvas.getContext('2d');
-    // pctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-    // pctx.beginPath();
-    // pctx.arc(6, 6, 6, 0, 2*Math.PI, false);
-    // pctx.fill();
-    // pctx.closePath();
 
     var draw_point_canvas = function(cvs, radius) {
         var pctx = cvs.getContext('2d'),
@@ -71,7 +63,6 @@ var drawer = function(canvas_element) {
                 radius, radius, 0, radius, radius, radius);
         cvs.width = radius*2;
         cvs.height = radius*2;
-        console.log(grd);
         grd.addColorStop(0, 'rgba(0, 0, 0, 0.1994)');
         grd.addColorStop(0.2, 'rgba(0, 0, 0, 0.1666)');
         grd.addColorStop(0.4, 'rgba(0, 0, 0, 0.097)');
@@ -99,7 +90,7 @@ var drawer = function(canvas_element) {
 
     var draw_point = function(point, radius) {
         var x = point.x - radius, y = point.y - radius;
-        c.drawImage(point_canvas, x, y)
+        c.drawImage(point_canvas, x, y);
     }
 
     var handle_move = function(new_point) {
@@ -124,27 +115,26 @@ var drawer = function(canvas_element) {
     };
 
     document.addEventListener('mousedown', function(e) {
-        button_count++;
+        drawing = true;
         start_draw(e);
     });
 
     document.addEventListener('mouseup', function(e) {
-        button_count--;
+        drawing = false;
         stop_draw(e);
     });
 
     document.addEventListener('dragend', function(e) {
-        button_count--;
+        drawing = false;
         stop_draw(e);
     });
 
     cvs.addEventListener('mousedown', function(e) {
-        console.log(e);
         draw_point(getEventOffset(e), 6);
     });
 
     cvs.addEventListener('mousemove', function(e) {
-        if (button_count < 1) { return; }
+        if (!drawing) { return; }
         handle_move(getEventOffset(e));
     })
 
