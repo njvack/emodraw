@@ -11,8 +11,25 @@ class Admin::ExperimentsControllerTest < ActionController::TestCase
     assert_redirected_to new_admin_session_path
   end
 
-  test "index works" do
+  test "index renders" do
     get :index
     assert_response :success
+  end
+
+  test "new renders" do
+    get :new
+    assert_response :success
+  end
+
+  test "edit renders" do
+    get :edit, :id => experiments(:emo)
+    assert_response :success
+  end
+
+  test "creating experiments works" do
+    assert_difference("Experiment.count", 1) do
+      post :create, {:experiment => {:name => "newexp"}}
+      assert_redirected_to edit_admin_experiment_path(assigns(:experiment))
+    end
   end
 end
