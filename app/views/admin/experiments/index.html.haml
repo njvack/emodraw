@@ -1,1 +1,4 @@
 %h1 EmoDraw Admin!
+#experiments
+  = link_to "Add new experiment", new_admin_experiment_path
+  = render :partial => 'experiment', :collection => experiments

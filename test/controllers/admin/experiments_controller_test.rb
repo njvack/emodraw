@@ -14,6 +14,7 @@ class Admin::ExperimentsControllerTest < ActionController::TestCase
   test "index renders" do
     get :index
     assert_response :success
+    assert assigns(:experiments).count > 0
   end
 
   test "new renders" do
@@ -31,5 +32,12 @@ class Admin::ExperimentsControllerTest < ActionController::TestCase
       post :create, {:experiment => {:name => "newexp"}}
       assert_redirected_to edit_admin_experiment_path(assigns(:experiment))
     end
+  end
+
+  test "updating experiment works" do
+    exp = experiments(:emo)
+    post :update, {:id => exp, :experiment => { :name => "Emofix"}}
+    assert_redirected_to edit_admin_experiment_path(assigns(:experiment))
+    assert assigns(:experiment).name == 'Emofix'
   end
 end

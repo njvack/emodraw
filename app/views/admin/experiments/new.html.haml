@@ -1,0 +1,9 @@
+%h1 Add new experiment
+= form_for [:admin, experiment] do |f|
+  .fl
+    .label
+      =f.label :name
+    .field
+      =f.text_field :name
+  .fl
+    = submit_tag "Save!"

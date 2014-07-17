@@ -1,10 +1,20 @@
 class Admin::ExperimentsController < AdminController
-  before_action :find_experiment, :only => [:edit]
+
+  def experiments
+    @experiments ||= Experiment.all
+  end
+  helper_method :experiments
+
+  def experiment
+    @experiment ||= Experiment.find(params[:id])
+  end
+  helper_method :experiment
 
   def index
   end
 
   def new
+    @experiment = Experiment.new
   end
 
   def edit
@@ -19,12 +29,16 @@ class Admin::ExperimentsController < AdminController
     end
   end
 
+  def update
+    if experiment.update_attributes(experiment_params)
+      redirect_to edit_admin_experiment_path(experiment)
+    else
+      render :action => 'edit'
+    end
+  end
+
   protected
   def experiment_params
     params.require(:experiment).permit(:name)
-  end
-
-  def find_experiment
-    @experiment = Experiment.find(params[:id])
   end
 end
