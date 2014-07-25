@@ -1,1 +1,5 @@
-= avatar.name
+.avatar
+  .name
+    = avatar.name
+  %a{:href => admin_image_path(avatar.avatar_image)}
+    %img{:src => admin_image_path(avatar.avatar_image), :height => 100}

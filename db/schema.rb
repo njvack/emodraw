@@ -47,13 +47,13 @@ ActiveRecord::Schema.define(version: 20140725175607) do
   end
 
   create_table "images", force: true do |t|
-    t.string   "imageable_type", null: false
-    t.integer  "imageable_id",   null: false
-    t.string   "type",           null: false
-    t.string   "content_type",   null: false
+    t.string   "imageable_type",                    null: false
+    t.integer  "imageable_id",                      null: false
+    t.string   "type",                              null: false
+    t.string   "content_type",                      null: false
     t.integer  "height"
     t.integer  "width"
-    t.binary   "data"
+    t.binary   "data",           limit: 2147483647
     t.datetime "created_at"
     t.datetime "updated_at"
   end
