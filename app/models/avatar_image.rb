@@ -1,0 +1,3 @@
+class AvatarImage < Image
+
+end
