@@ -7,7 +7,7 @@ class CreateImages < ActiveRecord::Migration
       t.string :content_type, :null => false
       t.integer :height
       t.integer :width
-      t.binary :data
+      t.binary :data, :limit => 16.megabyte
 
       t.timestamps
       t.index [:type, :imageable_type, :imageable_id]
