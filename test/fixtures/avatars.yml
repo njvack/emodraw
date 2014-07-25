@@ -1,0 +1,4 @@
+emo_male:
+    experiment: emo
+    name: male
+    active: true

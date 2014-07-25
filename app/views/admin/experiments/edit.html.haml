@@ -8,3 +8,17 @@
       =f.text_field :name
   .fl
     = submit_tag "Save"
+
+%h3 Avatars
+= form_for [:admin, experiment, Avatar.new] do |f|
+  .fl
+    .label
+      = f.label :name
+    .field
+      =f.text_field :name
+  .fl
+    .field
+      =f.file_field :image_filename
+  .fl
+    = submit_tag "Upload!"
+= render :partial => 'avatar', :collection => experiment.avatars

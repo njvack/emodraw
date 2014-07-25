@@ -4,7 +4,9 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root :to => 'experiments#index'
-    resources :experiments
+    resources :experiments do
+      resources :avatars
+    end
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
