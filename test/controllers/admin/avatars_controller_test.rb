@@ -12,7 +12,7 @@ class Admin::AvatarsControllerTest < ActionController::TestCase
   end
 
   test "create works" do
-    af = fixture_file_upload('male.svg', 'image/svg')
+    af = fixture_file_upload('1x1.gif', 'image/gif')
     post :create, :experiment_id => experiments(:emo),
       :avatar => {:name => "foo", :uploaded_file => af}
     assert_redirected_to edit_admin_experiment_path(assigns(:experiment))
