@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140725175607) do
+ActiveRecord::Schema.define(version: 20140725211433) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -59,5 +59,13 @@ ActiveRecord::Schema.define(version: 20140725175607) do
   end
 
   add_index "images", ["type", "imageable_type", "imageable_id"], name: "index_images_on_type_and_imageable_type_and_imageable_id", using: :btree
+
+  create_table "prompts", force: true do |t|
+    t.integer  "experiment_id",             null: false
+    t.string   "text",                      null: false
+    t.integer  "position",      default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
