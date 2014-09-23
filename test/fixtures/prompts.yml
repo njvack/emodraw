@@ -1,9 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  experiment: 
-  text: MyString
+silly:
+  experiment: emo
+  text: Where do you feel silly?
+  position: 1
 
-two:
-  experiment: 
-  text: MyString
+happy:
+  experiment: emo
+  text: Where do you feel happy?
+  position: 2
