@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140725211433) do
+ActiveRecord::Schema.define(version: 20140916160621) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -60,6 +60,16 @@ ActiveRecord::Schema.define(version: 20140725211433) do
 
   add_index "images", ["type", "imageable_type", "imageable_id"], name: "index_images_on_type_and_imageable_type_and_imageable_id", using: :btree
 
+  create_table "participants", force: true do |t|
+    t.string   "participant_tag", null: false
+    t.integer  "experiment_id",   null: false
+    t.integer  "avatar_id",       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "participants", ["experiment_id", "participant_tag"], name: "index_participants_on_experiment_id_and_participant_tag", unique: true, using: :btree
+
   create_table "prompts", force: true do |t|
     t.integer  "experiment_id",             null: false
     t.string   "text",                      null: false
@@ -67,5 +77,15 @@ ActiveRecord::Schema.define(version: 20140725211433) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "responses", force: true do |t|
+    t.integer  "participant_id",                 null: false
+    t.integer  "prompt_id",                      null: false
+    t.boolean  "completed",      default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "responses", ["participant_id", "prompt_id"], name: "index_responses_on_participant_id_and_prompt_id", unique: true, using: :btree
 
 end

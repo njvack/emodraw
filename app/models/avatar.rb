@@ -1,6 +1,7 @@
 class Avatar < ActiveRecord::Base
   belongs_to :experiment
   has_one :avatar_image, :as => :imageable
+  has_many :participants
   attr_writer :uploaded_file
 
   after_save :save_image_file!
