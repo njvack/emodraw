@@ -1,0 +1,6 @@
+emo_male:
+  imageable_type: "Avatar"
+  imageable: emo_male
+  type: AvatarImage
+  content_type: text/plain
+  data: ""
