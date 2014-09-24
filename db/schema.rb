@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140924201026) do
+ActiveRecord::Schema.define(version: 20140924210835) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -44,7 +44,10 @@ ActiveRecord::Schema.define(version: 20140924201026) do
     t.boolean  "running",    default: true, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "url_slug",                  null: false
   end
+
+  add_index "experiments", ["url_slug"], name: "index_experiments_on_url_slug", unique: true, using: :btree
 
   create_table "images", force: true do |t|
     t.string   "imageable_type",                    null: false
